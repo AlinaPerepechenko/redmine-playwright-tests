@@ -17,6 +17,13 @@ The project features a fully automated CI/CD pipeline via **GitHub Actions** tha
 
 ---
 
+ ## Running Tests
+    - `npm run test` — runs all automated tests in headless mode.
+    - `npm run test:headed` — runs tests with a browser window displayed.
+    - `npm run test:allure` — runs tests and automatically generates an Allure report.
+
+---
+
 ## Project Structure
 
 ```text

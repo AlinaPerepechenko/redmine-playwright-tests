@@ -3,7 +3,7 @@ import { HomePage } from '../pages/HomePage';
 import { RegisterPage } from '../pages/RegisterPage';
 import { LoginPage } from '../pages/LoginPage';
 import { ProjectsPage } from '../pages/ProjectsPage';
-import { DownloadPage } from '../pages/DownloadPage';
+import { DownloadPage } from '../pages/DownloadPage'; // Переконайся, що імпортуєш усі класи
 
 test.describe('Redmine Smoke and Functional Test Suite', () => {
     let homePage: HomePage;
@@ -15,55 +15,53 @@ test.describe('Redmine Smoke and Functional Test Suite', () => {
 
     test('TC-001: Verify that registration page opens successfully', async ({ page }) => {
         const registerPage = new RegisterPage(page);
-        await homePage.registerLink.click();
 
-        await expect(registerPage.registerForm).toBeVisible();
-        await expect(registerPage.loginInput).toBeVisible();
-        await expect(registerPage.passwordInput).toBeVisible();
-        await expect(registerPage.confirmationInput).toBeVisible();
-        await expect(registerPage.firstNameInput).toBeVisible();
-        await expect(registerPage.lastNameInput).toBeVisible();
-        await expect(registerPage.emailInput).toBeVisible();
-        await expect(registerPage.submitButton).toBeVisible();
+        await homePage.clickRegister();
+
+        await registerPage.verifyRegistrationFormIsVisible();
     });
 
-test('TC-002: Verify that login page opens successfully', async ({ page }) => {
-    const loginPage = new LoginPage(page);
-    await homePage.loginLink.click();
+    test('TC-002: Verify that login page opens successfully', async ({ page }) => {
+        const loginPage = new LoginPage(page);
+        
+        await homePage.clickLogin();
 
-    await expect(loginPage.loginContainer).toBeVisible();
-    await expect(loginPage.usernameInput).toBeVisible();
-    await expect(loginPage.passwordInput).toBeVisible();
-    await expect(loginPage.stayLoggedInCheckbox).toBeVisible();
-    await expect(loginPage.submitButton).toBeVisible();
-});
+        await loginPage.verifyLoginFormIsVisible();
+    });
 
+    test('TC-003: Verify that search returns results for a valid keyword', async ({ page }) => {
+ 
+        await homePage.searchFor('API');
 
-test('TC-003: Verify that search returns results for a valid keyword', async ({ page }) => {
-    await homePage.searchFor('API');
+        await expect(page).toHaveURL(/.*search.*/);
+        await expect(homePage.searchResultsHeading).toContainText(/Результати|Results/);
+        await expect(homePage.searchResultsList).toBeVisible();
+    });
 
-    await expect(page).toHaveURL(/.*search.*/);
-    
-    await expect(homePage.searchResultsHeading).toContainText(/Результати|Results/);
-    
-    await expect(homePage.searchResultsList).toBeVisible();
-});
-
-    test('TC-004: Verify that Projects page is accessible from header menu', async ({ page }) => {
+test('TC-004: Verify that Projects page is accessible from header menu', async ({ page }) => {
         const projectsPage = new ProjectsPage(page);
-        await homePage.projectsLink.click();
+        
+        await homePage.clickProjects();
 
         await expect(projectsPage.heading).toHaveText('Projects');
-        await expect(projectsPage.projectsList).toBeVisible();
+        
+        const isListVisible = await projectsPage.isProjectsListVisible();
+        expect(isListVisible).toBe(true);
+
         await expect(page).toHaveURL(/.*\/projects.*/);
     });
 
     test('TC-005: Verify that Download page is opened from navigation menu', async ({ page }) => {
         const downloadPage = new DownloadPage(page);
-        await homePage.downloadLink.click();
+
+        await homePage.clickDownload();
 
         await expect(downloadPage.heading).toHaveText(/^Download/);
-        await expect(downloadPage.versionTable).toBeVisible();
+        
+        const isVersionTableVisible = await downloadPage.isVersionTableVisible();
+        expect(isVersionTableVisible).toBe(true);
+
         await expect(page).toHaveURL(/.*\/Download.*/);
-    });
+  });
+  
 });

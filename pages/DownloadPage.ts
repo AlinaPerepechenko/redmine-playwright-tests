@@ -13,4 +13,23 @@ export class DownloadPage {
         this.latestReleaseInfo = page.locator('a.external').first(); 
         this.versionTable = page.locator('#content table').first()
     }
+
+    async navigate() {
+        await this.page.goto('/projects/redmine/wiki/Download'); // або твій повний URL, якщо немає baseUrl
+    }
+
+   
+    async getHeadingText(): Promise<string> {
+        return await this.heading.innerText();
+    }
+
+   
+    async clickLatestReleaseLink() {
+        await this.latestReleaseInfo.click();
+    }
+
+   
+    async isVersionTableVisible(): Promise<boolean> {
+        return await this.versionTable.isVisible();
+    }
 }

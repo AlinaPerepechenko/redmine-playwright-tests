@@ -11,4 +11,7 @@ export class ProjectsPage {
         this.heading = page.locator('#content h2');
         this.projectsList = page.locator('#projects-index');
     }
+async isProjectsListVisible(): Promise<boolean> {
+        return await this.projectsList.isVisible();
+    }
 }

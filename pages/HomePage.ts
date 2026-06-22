@@ -32,4 +32,20 @@ export class HomePage {
         await this.searchField.fill(keyword);
         await this.page.keyboard.press('Enter');
     }
+
+    async clickRegister() {
+        await this.registerLink.click();
+    }
+
+    async clickLogin() {
+        await this.loginLink.click();
+    }
+
+    async clickProjects() {
+        await this.projectsLink.click();
+    }
+
+    async clickDownload() {
+        await this.downloadLink.click();
+    }
 }
