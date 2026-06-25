@@ -1,36 +1,18 @@
-import { test, expect } from '@playwright/test';
-import { HomePage } from '../pages/HomePage';
-import { RegisterPage } from '../pages/RegisterPage';
-import { LoginPage } from '../pages/LoginPage';
-import { ProjectsPage } from '../pages/ProjectsPage';
-import { DownloadPage } from '../pages/DownloadPage'; // Переконайся, що імпортуєш усі класи
+import { test, expect } from './fixtures';
 
 test.describe('Redmine Smoke and Functional Test Suite', () => {
-    let homePage: HomePage;
 
-    test.beforeEach(async ({ page }) => {
-        homePage = new HomePage(page);
-        await homePage.navigate();
-    });
-
-    test('TC-001: Verify that registration page opens successfully', async ({ page }) => {
-        const registerPage = new RegisterPage(page);
-
+    test('TC-001: Verify that registration page opens successfully', async ({ homePage, registerPage }) => {
         await homePage.clickRegister();
-
         await registerPage.verifyRegistrationFormIsVisible();
     });
 
-    test('TC-002: Verify that login page opens successfully', async ({ page }) => {
-        const loginPage = new LoginPage(page);
-        
+    test('TC-002: Verify that login page opens successfully', async ({ homePage, loginPage }) => {
         await homePage.clickLogin();
-
         await loginPage.verifyLoginFormIsVisible();
     });
 
-    test('TC-003: Verify that search returns results for a valid keyword', async ({ page }) => {
- 
+    test('TC-003: Verify that search returns results for a valid keyword', async ({ homePage, page }) => {
         await homePage.searchFor('API');
 
         await expect(page).toHaveURL(/.*search.*/);
@@ -38,9 +20,7 @@ test.describe('Redmine Smoke and Functional Test Suite', () => {
         await expect(homePage.searchResultsList).toBeVisible();
     });
 
-test('TC-004: Verify that Projects page is accessible from header menu', async ({ page }) => {
-        const projectsPage = new ProjectsPage(page);
-        
+    test('TC-004: Verify that Projects page is accessible from header menu', async ({ homePage, projectsPage, page }) => {
         await homePage.clickProjects();
 
         await expect(projectsPage.heading).toHaveText('Projects');
@@ -51,9 +31,7 @@ test('TC-004: Verify that Projects page is accessible from header menu', async (
         await expect(page).toHaveURL(/.*\/projects.*/);
     });
 
-    test('TC-005: Verify that Download page is opened from navigation menu', async ({ page }) => {
-        const downloadPage = new DownloadPage(page);
-
+    test('TC-005: Verify that Download page is opened from navigation menu', async ({ homePage, downloadPage, page }) => {
         await homePage.clickDownload();
 
         await expect(downloadPage.heading).toHaveText(/^Download/);
@@ -62,6 +40,6 @@ test('TC-004: Verify that Projects page is accessible from header menu', async (
         expect(isVersionTableVisible).toBe(true);
 
         await expect(page).toHaveURL(/.*\/Download.*/);
-  });
+    });
   
 });
